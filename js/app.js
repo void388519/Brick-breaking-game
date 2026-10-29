@@ -7,7 +7,7 @@
   const formatTime = seconds => `${pad(Math.floor(seconds / 60))}:${pad(Math.floor(seconds % 60))}`;
   const number = n => Math.floor(n).toLocaleString('en-US');
   const key = 'neon_breakout_v2';
-  const defaults = {theme:'auto',difficulty:'normal',sound:true,volume:35,reduced:window.matchMedia('(prefers-reduced-motion: reduce)').matches};
+  const defaults = {theme:'night',language:'zh-Hant',difficulty:'normal',sound:true,volume:35,reduced:window.matchMedia('(prefers-reduced-motion: reduce)').matches};
   let persistent = true, audio, view = 'levels', selectedId = 1, themeDay = false;
   let saveTimer, lastCombo = 0, shownScore = 0, targetScore = 0, scoreRAF = 0;
   const pendingLayouts = new Map(Neon.levels.map(l => [l.id,Neon.generateLayout(l)]));
@@ -19,6 +19,7 @@
     if (saved && saved.version === 2) {
       const s = saved.settings || {};
       data.settings.theme = ['auto','day','night'].includes(s.theme) ? s.theme : defaults.theme;
+      data.settings.language = Neon.i18n.languages.includes(s.language) ? s.language : defaults.language;
       data.settings.difficulty = ['easy','normal','hard'].includes(s.difficulty) ? s.difficulty : defaults.difficulty;
       for (const name of ['sound','reduced']) if (typeof s[name] === 'boolean') data.settings[name] = s[name];
       if (Number.isFinite(s.volume)) data.settings.volume = Math.max(0,Math.min(100,s.volume));
@@ -37,6 +38,7 @@
     }
     data.legacyHigh = Math.max(0,Number(saved?.legacyHigh) || 0,Number(localStorage.getItem('neon_breakout_highscore')) || 0);
   } catch { persistent = false; }
+  Neon.i18n.setLanguage(data.settings.language);
 
   function save() {
     clearTimeout(saveTimer);
@@ -160,7 +162,9 @@
   }
   function syncSettings() {
     const s = data.settings;
-    $('themeSelect').value = s.theme;$('soundSetting').checked = s.sound;
+    $('themeSelect').value = s.theme === 'auto' ? themeDay ? 'day' : 'night' : s.theme;
+    $('autoCycleSetting').checked = s.theme === 'auto';
+    $('soundSetting').checked = s.sound;
     $('motionSetting').checked = s.reduced;$('volumeSetting').value = s.volume;
     $('soundBtn').innerHTML = icon(s.sound ? 'volume' : 'muted');
     $('soundBtn').setAttribute('aria-pressed',String(s.sound));
@@ -364,6 +368,17 @@
       syncSettings();save();
     });
   }
+  document.querySelectorAll('[data-language-select]').forEach(select => {
+    select.addEventListener('change',event => {
+      data.settings.language = Neon.i18n.setLanguage(event.target.value);
+      save();
+    });
+  });
+  $('autoCycleSetting').addEventListener('change',event => {
+    data.settings.theme = event.target.checked ? 'auto' : themeDay ? 'day' : 'night';
+    if (event.target.checked && engine.level && view === 'game') themeDay = engine.cycle % 2 === 0 ? engine.level.day : !engine.level.day;
+    syncSettings();save();
+  });
   window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',syncSettings);
   const canvas = $('gameCanvas');
   canvas.addEventListener('pointermove',e => {

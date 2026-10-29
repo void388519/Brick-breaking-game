@@ -516,7 +516,7 @@
       for (const drop of this.drops) {
         const def = Neon.powerups[drop.type];c.save();c.translate(drop.x,drop.y);c.fillStyle = def.color;
         c.shadowColor = def.color;c.shadowBlur = this.settings.reduced ? 0 : 12;rounded(c,-13,-13,26,26,7);c.fill();c.shadowBlur = 0;
-        c.fillStyle = '#17252c';c.font = 'bold 13px "Microsoft JhengHei", sans-serif';c.textAlign = 'center';c.textBaseline = 'middle';c.fillText(def.short,0,1);c.restore();
+        c.fillStyle = '#17252c';c.font = 'bold 13px "Microsoft JhengHei", sans-serif';c.textAlign = 'center';c.textBaseline = 'middle';c.fillText(Neon.i18n?.text(def.short) || def.short,0,1);c.restore();
       }
       for (const particle of this.particles) {
         c.globalAlpha = clamp(particle.life / particle.maxLife,0,1);c.fillStyle = particle.color;

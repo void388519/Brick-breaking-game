@@ -8,6 +8,7 @@
   <title>NEON BREAKOUT — 八段頻率，一場旅程</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="js/levels.js"></script>
+  <script defer src="js/i18n.js"></script>
   <script defer src="js/game.js"></script>
   <script defer src="js/app.js"></script>
 </head>
@@ -42,7 +43,7 @@
       <button class="nav-link" data-action="tab" data-tab="achievements"><svg class="icon"><use href="#i-trophy"/></svg>成就收藏<span id="achievementDot" class="notification-dot" hidden></span></button>
       <button class="nav-link" data-action="guide"><svg class="icon"><use href="#i-info"/></svg>遊戲指南</button>
     </nav>
-    <div class="header-actions"><button class="theme-button" id="themeBtn" data-action="theme" title="切換日夜主題"><svg class="icon"><use href="#i-moon"/></svg><span>夜間</span></button><span class="header-divider"></span><button class="icon-button" id="soundBtn" data-action="sound" aria-label="關閉音效" aria-pressed="true"><svg class="icon"><use href="#i-volume"/></svg></button><button class="icon-button" data-action="settings" aria-label="遊戲設定"><svg class="icon"><use href="#i-settings"/></svg></button></div>
+    <div class="header-actions"><label class="language-control"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><select id="languageSelect" data-language-select aria-label="語言 / Language"><option value="en" data-no-translate>English</option><option value="zh-Hant" data-no-translate selected>繁體中文</option><option value="zh-Hans" data-no-translate>简体中文</option></select></label><button class="theme-button" id="themeBtn" data-action="theme" title="切換日夜主題"><svg class="icon"><use href="#i-moon"/></svg><span>夜間</span></button><span class="header-divider"></span><button class="icon-button" id="soundBtn" data-action="sound" aria-label="關閉音效" aria-pressed="true"><svg class="icon"><use href="#i-volume"/></svg></button><button class="icon-button" data-action="settings" aria-label="遊戲設定"><svg class="icon"><use href="#i-settings"/></svg></button></div>
   </div></header>
   <main class="page-shell">
     <section id="lobbyView" class="view"><div id="levelsPanel">
@@ -66,7 +67,17 @@
     <footer class="site-footer"><span>NEON BREAKOUT<span class="footer-slash"> / </span><span class="footer-edition">THE DAY & NIGHT EDITION</span></span><span>慢慢來，好玩的還在下一關。<span class="footer-star">✦</span></span></footer>
   </main>
   <dialog id="levelDialog" class="modal level-modal" aria-labelledby="detailTitle"><button class="icon-button modal-close" data-action="close-dialog" aria-label="關閉關卡詳情" autofocus><svg class="icon"><use href="#i-close"/></svg></button><div id="levelDetail"></div></dialog>
-  <dialog id="settingsDialog" class="modal settings-modal" aria-labelledby="settingsTitle"><button class="icon-button modal-close" data-action="close-dialog" aria-label="關閉設定" autofocus><svg class="icon"><use href="#i-close"/></svg></button><div class="eyebrow">MAKE IT YOURS</div><h2 id="settingsTitle">調整你的遊戲節奏</h2><p class="modal-intro">找一個舒服的光線、一個剛好的速度。</p><div class="setting-row"><label for="themeSelect">環境主題<small>自動模式：每 45 秒切換晝夜</small></label><select id="themeSelect"><option value="auto">自動晝夜</option><option value="night">夜間</option><option value="day">日間</option></select></div><div class="setting-row"><label for="soundSetting">街機音效<small>反彈、碎裂與通關的合成音效</small></label><input id="soundSetting" type="checkbox" role="switch"></div><div class="setting-row"><label for="motionSetting">減少動態效果<small>減少粒子、畫面震動與介面動畫</small></label><input id="motionSetting" type="checkbox" role="switch"></div><div class="setting-row"><label for="volumeSetting">音量</label><input id="volumeSetting" type="range" min="0" max="100" step="5"></div><p class="settings-note"><svg class="icon"><use href="#i-check"/></svg>設定即時套用，自動儲存。</p><button class="button primary full-width" data-action="close-dialog">調整好了，繼續</button></dialog>
+  <dialog id="settingsDialog" class="modal settings-modal" aria-labelledby="settingsTitle">
+    <button class="icon-button modal-close" data-action="close-dialog" aria-label="關閉設定" autofocus><svg class="icon"><use href="#i-close"/></svg></button>
+    <div class="eyebrow">MAKE IT YOURS</div><h2 id="settingsTitle">調整你的遊戲節奏</h2><p class="modal-intro">找一個舒服的光線、一個剛好的速度。</p>
+    <div class="setting-row"><label for="languageSetting">介面語言<small>即時切換，保留目前遊戲進度</small></label><select id="languageSetting" data-language-select><option value="en" data-no-translate>English</option><option value="zh-Hant" data-no-translate selected>繁體中文</option><option value="zh-Hans" data-no-translate>简体中文</option></select></div>
+    <div class="setting-row"><label for="autoCycleSetting">自動晝夜切換<small>每 45 秒切換；關閉後固定目前主題</small></label><input id="autoCycleSetting" type="checkbox" role="switch"></div>
+    <div class="setting-row"><label for="themeSelect">環境主題<small>選擇主題也會關閉自動切換</small></label><select id="themeSelect"><option value="night">夜間</option><option value="day">日間</option></select></div>
+    <div class="setting-row"><label for="soundSetting">街機音效<small>反彈、碎裂與通關的合成音效</small></label><input id="soundSetting" type="checkbox" role="switch"></div>
+    <div class="setting-row"><label for="motionSetting">減少動態效果<small>減少粒子、畫面震動與介面動畫</small></label><input id="motionSetting" type="checkbox" role="switch"></div>
+    <div class="setting-row"><label for="volumeSetting">音量</label><input id="volumeSetting" type="range" min="0" max="100" step="5"></div>
+    <p class="settings-note"><svg class="icon"><use href="#i-check"/></svg>設定即時套用，自動儲存。</p><button class="button primary full-width" data-action="close-dialog">調整好了，繼續</button>
+  </dialog>
   <dialog id="guideDialog" class="modal guide-modal" aria-labelledby="guideTitle"><button class="icon-button modal-close" data-action="close-dialog" aria-label="關閉遊戲指南" autofocus><svg class="icon"><use href="#i-close"/></svg></button><div class="eyebrow">A QUICK FIELD GUIDE</div><h2 id="guideTitle">很簡單，也很上癮。</h2><p class="modal-intro">移動擋板、接住球，把所有可破壞的磚塊清空。</p><div class="guide-steps"><div><b>01</b><h3>找到你的角度</h3><p>方向鍵 / A、D、滑鼠或觸控拖曳來移動。球打在擋板邊緣，反彈角度就越大。點擊球場或空白鍵發球。</p></div><div><b>02</b><h3>連擊，讓分數加速</h3><p>連續擊碎磚塊會累積連擊，最高 5 倍得分。碰到擋板或失去一顆球會中斷連擊；蓄滿能量後，空白鍵釋放脈衝。</p></div><div><b>03</b><h3>認識你的對手</h3><p>帶有白點的強化磚需擊中多次；帶十字的爆破磚會引爆周圍磚塊；灰色鋼磚無法破壞，不計入通關目標。</p></div><div><b>04</b><h3>收集三顆星</h3><p>完成關卡獲得一星、全程不失誤再一星、目標時間內通關再一星。目標依難度調整。每關可自由挑戰或重玩。</p></div></div><div class="guide-powers" id="guidePowers"></div><p class="guide-pause">按 P / Esc 暫停；切換分頁、離開視窗或開啟設定時也會自動暫停。自動晝夜只改變氛圍，不影響碰撞規則。</p><button class="button primary full-width" data-action="close-dialog">了解，準備開打<svg class="icon"><use href="#i-arrow"/></svg></button></dialog>
   <div id="toastStack" class="toast-stack" role="status" aria-live="polite"></div><noscript><div class="noscript">請啟用 JavaScript，才能開始 Neon Breakout 遊戲。</div></noscript>
 </body>
